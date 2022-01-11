@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,12 +44,14 @@ public class MainActivity extends AppCompatActivity {
 
         city = findViewById(R.id.editText);
         search = findViewById(R.id.button);
+        weatherInfo = new ArrayList<>();
 
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                  getWeather();
             }
+
         });
 
     }
@@ -67,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
                     WeatherResponse mydata = response.body();
-                    weatherInfo = new ArrayList<>();
+
                     weatherInfo.add(mydata);
 
               /* Main main = mydata.getMain();
@@ -95,9 +98,9 @@ public class MainActivity extends AppCompatActivity {
         public void createRecyclerView(){
             recyclerView = findViewById(R.id.recycleview);
             adapter = new MyAdapter(this, weatherInfo);
-
+            GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
             recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setLayoutManager(layoutManager);
         }
 
 

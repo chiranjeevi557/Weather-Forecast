@@ -39,7 +39,7 @@ public class Main {
     }
 
     public String getTemp() {
-        return String.format("%s°C", Double.toString(temp - 273));
+        return Double.toString(temp-273);
 
     }
 
