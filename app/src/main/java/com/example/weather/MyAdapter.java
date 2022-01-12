@@ -1,6 +1,7 @@
 package com.example.weather;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.text.style.BackgroundColorSpan;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 //import com.bumptech.glide.Glide;
@@ -68,12 +70,15 @@ public class MyAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
        // intpart=(int)temp1;
 
-        holder.temperature.setText(weatherResponse.getMain().getTemp());
+        holder.temperature.setText((weatherResponse.getMain().getTemp()).substring(0,2)+"°C");
         holder.city.setText(weatherResponse.getName());
         holder.country.setText(weatherResponse.getSys().getCountry());
         iconId = weatherResponse.getWeather().get(0).getIcon();
 
         setImageIcon(holder,iconId);
+        setOnClickListenerCard(holder,i);
+        
+
 
     }
 
@@ -81,6 +86,18 @@ public class MyAdapter extends RecyclerView.Adapter<ViewHolder> {
     public int getItemCount() {
         return weatherInfo.size() ;
     }
+    public void setOnClickListenerCard(@NonNull ViewHolder holder, int position){
+        WeatherResponse weatherResponse = weatherInfo.get(position);
+        holder.cardLayout.setOnClickListener(view -> {
+            Intent intent = new Intent(context, SecondActivity.class);
+            intent.putExtra("temperature",(weatherResponse.getMain().getTemp()).substring(0,2)+"°C");
+            intent.putExtra("city",weatherResponse.getName());
+            intent.putExtra("country",weatherResponse.getSys().getCountry());
+            intent.putExtra("weather",weatherResponse.getWeather().get(0).getIcon());
+            context.startActivity(intent);
+        });
+    }
+
     public void setImageIcon(@NonNull ViewHolder holder,  String iconId){
         String imageBaseUrl="https://openweathermap.org/img/wn/";;
         String imageUrlEndPoint="@2x.png";
@@ -103,6 +120,7 @@ public class MyAdapter extends RecyclerView.Adapter<ViewHolder> {
 class ViewHolder extends RecyclerView.ViewHolder {
 
     public View cardView;
+    public ConstraintLayout cardLayout;
     TextView temperature;
     TextView city;
     TextView country;
@@ -116,6 +134,7 @@ class ViewHolder extends RecyclerView.ViewHolder {
         this.country=itemView.findViewById(R.id.countryName_textView);
         this.imageView=itemView.findViewById(R.id.icon_imageView);
         this.cardView=itemView.findViewById(R.id.cardView);
+        this.cardLayout = itemView.findViewById(R.id.card_layout);
 
     }
 
